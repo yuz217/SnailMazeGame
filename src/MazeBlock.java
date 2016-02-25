@@ -24,6 +24,7 @@ public class MazeBlock {
 	
 	public void printBlock()
 	{
+		System.out.println("At x =" + this.x + " and y = " + this.y);
 		if (!this.topOpen)
 		{
 			System.out.println("***");
@@ -32,17 +33,21 @@ public class MazeBlock {
 		{
 			System.out.println("* *");
 		}
-		if (!this.leftOpen)
+		if (!this.leftOpen && this.rightOpen)
 		{
-			System.out.print("* ");
+			System.out.println("*  ");
 		}
-		if (!this.rightOpen)
+		else if (!this.rightOpen && this.leftOpen)
 		{
-			System.out.println("*");
+			System.out.println("  *");
+		}
+		else if (this.rightOpen && this.leftOpen)
+		{
+			System.out.println("");
 		}
 		else
 		{
-			System.out.println("");
+			System.out.println("* *");
 		}
 		if (!this.bottomOpen)
 		{
@@ -72,5 +77,25 @@ public class MazeBlock {
 	public int getY()
 	{
 		return this.y;
+	}
+	
+	// 0 = top, 1 = bottom, 2 = left, 3 = right
+	public void open(int dir)
+	{
+		switch (dir)
+		{
+		case 0:
+			this.topOpen = true;
+			break;
+		case 1:
+			this.bottomOpen = true;
+			break;
+		case 2:
+			this.leftOpen = true;
+			break;
+		case 3:
+			this.rightOpen = true;
+			break;
+		}
 	}
 }

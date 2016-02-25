@@ -24,6 +24,8 @@ public class Maze {
 			maze = new MazeBlock[5][5];
 			this.init();
 			this.build();
+			// For debugging purposes only
+			this.printMaze();
 		}
 		else if (size == 1)
 		{
@@ -80,7 +82,9 @@ public class Maze {
 							success = true;
 							maze[curY - 1][curX].setVisited();
 							unfinishedNodes.add(maze[curY - 1][curX]);
-							//System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY - 1));
+							current.open(0);
+							maze[curY - 1][curX].open(1);
+							System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY - 1));
 						}
 					}
 					break;
@@ -94,7 +98,9 @@ public class Maze {
 							success = true;
 							maze[curY + 1][curX].setVisited();
 							unfinishedNodes.add(maze[curY + 1][curX]);
-							//System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY + 1));
+							current.open(1);
+							maze[curY + 1][curX].open(0);
+							System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY + 1));
 						}
 					}
 					break;
@@ -108,7 +114,9 @@ public class Maze {
 							success = true;
 							maze[curY][curX - 1].setVisited();
 							unfinishedNodes.add(maze[curY][curX - 1]);
-							//System.out.println("Building path from " + curX + ", " + curY + " to " + (curX - 1) + " , " + curY);
+							current.open(2);
+							maze[curY][curX - 1].open(3);
+							System.out.println("Building path from " + curX + ", " + curY + " to " + (curX - 1) + " , " + curY);
 						}
 					}
 					break;
@@ -122,7 +130,9 @@ public class Maze {
 							success = true;
 							maze[curY][curX + 1].setVisited();
 							unfinishedNodes.add(maze[curY][curX + 1]);
-							//System.out.println("Building path from " + curX + ", " + curY + " to " + (curX + 1) + " , " + curY);
+							current.open(3);
+							maze[curY][curX + 1].open(2);
+							System.out.println("Building path from " + curX + ", " + curY + " to " + (curX + 1) + " , " + curY);
 						}
 					}
 					break;
@@ -196,6 +206,18 @@ public class Maze {
 			startWall = 3;
 			//System.out.println("Pos on right wall at " + randPos + ", " + (maze.length - 1));
 			break;
+		}
+	}
+	
+	// Method for debugging, prints the maze in a vertical line for debugging purposes
+	private void printMaze()
+	{
+		for (int i = 0; i < maze.length; i++)
+		{
+			for (int f = 0; f < maze[0].length; f++)
+			{
+				maze[i][f].printBlock();
+			}
 		}
 	}
 }
