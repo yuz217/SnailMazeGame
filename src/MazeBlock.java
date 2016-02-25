@@ -1,12 +1,12 @@
 
 public class MazeBlock {
 
-	boolean topOpen;
-	boolean bottomOpen;
-	boolean leftOpen;
-	boolean rightOpen;
+	private boolean topOpen;
+	private boolean bottomOpen;
+	private boolean leftOpen;
+	private boolean rightOpen;
 	
-	boolean visited;
+	private boolean visited;
 	
 	public MazeBlock()
 	{
@@ -49,4 +49,13 @@ public class MazeBlock {
 		}
 	}
 	
+	public void setVisited()
+	{
+		this.visited = true;
+	}
+	
+	public boolean isVisited()
+	{
+		return this.visited;
+	}
 }
