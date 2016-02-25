@@ -56,21 +56,25 @@ public class Maze {
 		case 0:
 			maze[0][randPos].setVisited();
 			unfinishedNodes.add(maze[0][randPos]);
+			//System.out.println("Pos on top wall at " + "0, " + randPos);
 			break;
 		// Left wall
 		case 1:
 			maze[randPos][0].setVisited();
 			unfinishedNodes.add(maze[randPos][0]);
+			//System.out.println("Pos on left wall at " + randPos + ", 0");
 			break;
 		// Right wall
 		case 2:
 			maze[randPos][maze.length - 1].setVisited();
 			unfinishedNodes.add(maze[randPos][maze.length - 1]);
+			//System.out.println("Pos on right wall at " + randPos + ", " + (maze.length - 1));
 			break;
 		// Bottom wall
 		case 3:
 			maze[maze.length - 1][randPos].setVisited();
 			unfinishedNodes.add(maze[maze.length - 1][randPos]);
+			//System.out.println("Pos on bottom wall at " + (maze.length - 1) + ", " + randPos);
 			break;
 		}
 		
