@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+// Main class, start playing the game from here
 public class GameMain implements ActionListener{
 	JButton start, help, credits;
 	JFrame frame;
@@ -19,6 +20,7 @@ public class GameMain implements ActionListener{
 
 	public GameMain()
 	{
+		// Create a menu with 3 buttons
 		frame = new JFrame("Snail Maze Game");
 		frame.setSize(400, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +46,19 @@ public class GameMain implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		// If we clicked on start
+		if (e.getSource().equals(start))
+		{
+			new DifficultySelect();
+		} // Help
+		else if (e.getSource().equals(help))
+		{
+			
+		} // Credits
+		else if (e.getSource().equals(credits))
+		{
+			
+		}
 		
 	}
 }
