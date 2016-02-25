@@ -6,6 +6,7 @@ public class Maze {
 	MazeBlock[][] maze;
 	Random rn;
 	MazeBlock start;
+	MazeBlock end;
 	int removedNodes;
 	
 	// 0,1,2,3 for TOP, BOTTOM, LEFT, RIGHT
@@ -21,11 +22,12 @@ public class Maze {
 		if (size == 0)
 		{
 			//Make 10x10 maze
-			maze = new MazeBlock[5][5];
+			maze = new MazeBlock[10][10];
 			this.init();
 			this.build();
+			this.setEnd();
 			// For debugging purposes only
-			this.printMaze();
+			// this.printMaze();
 		}
 		else if (size == 1)
 		{
@@ -84,7 +86,7 @@ public class Maze {
 							unfinishedNodes.add(maze[curY - 1][curX]);
 							current.open(0);
 							maze[curY - 1][curX].open(1);
-							System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY - 1));
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY - 1));
 						}
 					}
 					break;
@@ -100,7 +102,7 @@ public class Maze {
 							unfinishedNodes.add(maze[curY + 1][curX]);
 							current.open(1);
 							maze[curY + 1][curX].open(0);
-							System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY + 1));
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY + 1));
 						}
 					}
 					break;
@@ -116,7 +118,7 @@ public class Maze {
 							unfinishedNodes.add(maze[curY][curX - 1]);
 							current.open(2);
 							maze[curY][curX - 1].open(3);
-							System.out.println("Building path from " + curX + ", " + curY + " to " + (curX - 1) + " , " + curY);
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + (curX - 1) + " , " + curY);
 						}
 					}
 					break;
@@ -132,7 +134,7 @@ public class Maze {
 							unfinishedNodes.add(maze[curY][curX + 1]);
 							current.open(3);
 							maze[curY][curX + 1].open(2);
-							System.out.println("Building path from " + curX + ", " + curY + " to " + (curX + 1) + " , " + curY);
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + (curX + 1) + " , " + curY);
 						}
 					}
 					break;
@@ -180,7 +182,7 @@ public class Maze {
 			unfinishedNodes.add(maze[0][randPos]);
 			start = maze[0][randPos];
 			startWall = 0;
-			//System.out.println("Pos on top wall at " + "0, " + randPos);
+			System.out.println("Pos on top wall at " + "0, " + randPos);
 			break;
 		// Bottom wall
 		case 1:
@@ -188,7 +190,7 @@ public class Maze {
 			unfinishedNodes.add(maze[maze.length - 1][randPos]);
 			start = maze[maze.length - 1][randPos];
 			startWall = 1;
-			//System.out.println("Pos on bottom wall at " + (maze.length - 1) + ", " + randPos);
+			System.out.println("Pos on bottom wall at " + (maze.length - 1) + ", " + randPos);
 			break;
 		// Left wall
 		case 2:
@@ -196,7 +198,7 @@ public class Maze {
 			unfinishedNodes.add(maze[randPos][0]);
 			start = maze[randPos][0];
 			startWall = 2;
-			//System.out.println("Pos on left wall at " + randPos + ", 0");
+			System.out.println("Pos on left wall at " + randPos + ", 0");
 			break;
 		// Right wall
 		case 3:
@@ -204,8 +206,41 @@ public class Maze {
 			unfinishedNodes.add(maze[randPos][maze.length - 1]);
 			start = maze[randPos][maze.length - 1];
 			startWall = 3;
-			//System.out.println("Pos on right wall at " + randPos + ", " + (maze.length - 1));
+			System.out.println("Pos on right wall at " + randPos + ", " + (maze.length - 1));
 			break;
+		}
+	}
+	
+	// Sets the finish node based on the position of the start node
+	private void setEnd()
+	{
+		int endPos = rn.nextInt(maze.length);
+		switch(startWall)
+		{
+		// Start on top, end on bottom
+		case 0:
+			end = maze[maze.length - 1][endPos];
+			break;
+		// Start on bottom, end on top
+		case 1:
+			end = maze[0][endPos];
+			break;
+		// Start on left, end on right
+		case 2:
+			end = maze[maze.length - 1][endPos];
+			break;
+		// Start on right, end on left
+		case 3:
+			end = maze[0][endPos];
+			break;
+		}
+		System.out.println("End is at position " + end.getY() + end.getX());
+
+		// Handle the corner case where end == start because of a corner
+		if (end.getY() == start.getY() && end.getX() == start.getX())
+		{
+			System.out.println("Reroll");
+			this.setEnd();
 		}
 	}
 	
