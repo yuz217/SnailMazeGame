@@ -8,13 +8,18 @@ public class MazeBlock {
 	
 	private boolean visited;
 	
-	public MazeBlock()
+	private int x;
+	private int y;
+	
+	public MazeBlock(int y,int x)
 	{
 		visited = false;
 		topOpen = false;
 		bottomOpen = false;
 		leftOpen = false;
 		rightOpen = false;
+		this.y = y;
+		this.x = x;
 	}
 	
 	public void printBlock()
@@ -57,5 +62,15 @@ public class MazeBlock {
 	public boolean isVisited()
 	{
 		return this.visited;
+	}
+	
+	public int getX()
+	{
+		return this.x;
+	}
+	
+	public int getY()
+	{
+		return this.y;
 	}
 }

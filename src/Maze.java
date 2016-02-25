@@ -5,8 +5,7 @@ public class Maze {
 	
 	MazeBlock[][] maze;
 	Random rn;
-	int startX;
-	int startY;
+	MazeBlock start;
 	
 	// This represents all the nodes we have explored (aka visited) whose neighbors are
 	// not also all visited
@@ -44,7 +43,32 @@ public class Maze {
 		 */
 		while (unfinishedNodes.size() != 0)
 		{
-			boolean pathBuilt = false;
+			// Keep track of which ways we attempted to traverse to
+			boolean upAttempt = false;
+			boolean downAttempt = false;
+			boolean leftAttempt = false;
+			boolean rightAttempt = false;
+			
+			// As long as any of these are false, keep looping
+			while (!upAttempt || !downAttempt || !leftAttempt || !rightAttempt)
+			{
+				int nextAttempt = rn.nextInt(4);
+				switch (nextAttempt)
+				{
+				// Up
+				case 0:
+					break;
+				// Down
+				case 1:
+					break;
+				// Left
+				case 2:
+					break;
+				// Right
+				case 3:
+					break;
+				}
+			}
 		}
 	}
 	
@@ -57,7 +81,7 @@ public class Maze {
 		{
 			for (int f = 0; f < maze[0].length; f++)
 			{
-				maze[i][f] = new MazeBlock();
+				maze[i][f] = new MazeBlock(i,f);
 			}
 		}
 		
@@ -74,32 +98,28 @@ public class Maze {
 		case 0:
 			maze[0][randPos].setVisited();
 			unfinishedNodes.add(maze[0][randPos]);
-			this.startY = 0;
-			this.startX = randPos;
+			start = maze[0][randPos];
 			//System.out.println("Pos on top wall at " + "0, " + randPos);
 			break;
 		// Left wall
 		case 1:
 			maze[randPos][0].setVisited();
 			unfinishedNodes.add(maze[randPos][0]);
-			this.startY = randPos;
-			this.startX = 0;
+			start = maze[randPos][0];
 			//System.out.println("Pos on left wall at " + randPos + ", 0");
 			break;
 		// Right wall
 		case 2:
 			maze[randPos][maze.length - 1].setVisited();
 			unfinishedNodes.add(maze[randPos][maze.length - 1]);
-			this.startY = randPos;
-			this.startX = maze.length - 1;
+			start = maze[randPos][maze.length - 1];
 			//System.out.println("Pos on right wall at " + randPos + ", " + (maze.length - 1));
 			break;
 		// Bottom wall
 		case 3:
 			maze[maze.length - 1][randPos].setVisited();
 			unfinishedNodes.add(maze[maze.length - 1][randPos]);
-			this.startY = maze.length - 1;
-			this.startX = randPos;
+			start = maze[maze.length - 1][randPos];
 			//System.out.println("Pos on bottom wall at " + (maze.length - 1) + ", " + randPos);
 			break;
 		}
