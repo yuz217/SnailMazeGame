@@ -6,6 +6,10 @@ public class Maze {
 	MazeBlock[][] maze;
 	Random rn;
 	MazeBlock start;
+	int removedNodes;
+	
+	// 0,1,2,3 for TOP, BOTTOM, LEFT, RIGHT
+	int startWall;
 	
 	// This represents all the nodes we have explored (aka visited) whose neighbors are
 	// not also all visited
@@ -13,12 +17,11 @@ public class Maze {
 	
 	public Maze(int size)
 	{
-		unfinishedNodes = new ArrayList<MazeBlock>();
 		rn = new Random();
 		if (size == 0)
 		{
 			//Make 10x10 maze
-			maze = new MazeBlock[10][10];
+			maze = new MazeBlock[5][5];
 			this.init();
 			this.build();
 		}
@@ -41,35 +44,100 @@ public class Maze {
 		 * 3. Add the unvisited node to the array
 		 * 4. If a unfinished node has no unvisited neighbors, pop it off the array
 		 */
-		while (unfinishedNodes.size() != 0)
+		while (removedNodes != maze.length * maze[0].length)
 		{
+			// Step 1: Get a random node
+			int nodeIndex = rn.nextInt(unfinishedNodes.size());
+			MazeBlock current = unfinishedNodes.get(nodeIndex);
+			int curY = current.getY();
+			int curX = current.getX();
+			// Note: Don't remove yet, only remove if later on we find that we can't traverse
+			
 			// Keep track of which ways we attempted to traverse to
 			boolean upAttempt = false;
 			boolean downAttempt = false;
 			boolean leftAttempt = false;
 			boolean rightAttempt = false;
 			
+			// Keep track if we're successful
+			boolean success = false;
+			
+			// Step 2: Build a path to a randomly selected neighboring unvisited node
 			// As long as any of these are false, keep looping
-			while (!upAttempt || !downAttempt || !leftAttempt || !rightAttempt)
+			while (!success && (!upAttempt || !downAttempt || !leftAttempt || !rightAttempt))
 			{
 				int nextAttempt = rn.nextInt(4);
 				switch (nextAttempt)
 				{
 				// Up
 				case 0:
+					upAttempt = true;
+					if (curY > 0)
+					{
+						// Step 3: Add the node to the array
+						if (!(maze[curY - 1][curX].isVisited()))
+						{
+							success = true;
+							maze[curY - 1][curX].setVisited();
+							unfinishedNodes.add(maze[curY - 1][curX]);
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY - 1));
+						}
+					}
 					break;
 				// Down
 				case 1:
+					downAttempt = true;
+					if (curY < maze.length - 1)
+					{
+						if (!(maze[curY + 1][curX].isVisited()))
+						{
+							success = true;
+							maze[curY + 1][curX].setVisited();
+							unfinishedNodes.add(maze[curY + 1][curX]);
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + curX + " , " + (curY + 1));
+						}
+					}
 					break;
 				// Left
 				case 2:
+					leftAttempt = true;
+					if (curX > 0)
+					{
+						if (!(maze[curY][curX - 1].isVisited()))
+						{
+							success = true;
+							maze[curY][curX - 1].setVisited();
+							unfinishedNodes.add(maze[curY][curX - 1]);
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + (curX - 1) + " , " + curY);
+						}
+					}
 					break;
 				// Right
 				case 3:
+					rightAttempt = true;
+					if (curX < maze[0].length - 1)
+					{
+						if (!(maze[curY][curX + 1].isVisited()))
+						{
+							success = true;
+							maze[curY][curX + 1].setVisited();
+							unfinishedNodes.add(maze[curY][curX + 1]);
+							//System.out.println("Building path from " + curX + ", " + curY + " to " + (curX + 1) + " , " + curY);
+						}
+					}
 					break;
 				}
 			}
+						
+			// Step 4: If no unvisited neighbors, pop off the array
+			if (upAttempt && downAttempt && leftAttempt && rightAttempt)
+			{
+				unfinishedNodes.remove(nodeIndex);
+				++removedNodes;
+			}
+			
 		}
+				
 	}
 	
 	// Picks a random node on the edge to be a start
@@ -84,6 +152,8 @@ public class Maze {
 				maze[i][f] = new MazeBlock(i,f);
 			}
 		}
+		removedNodes = 0;
+		unfinishedNodes = new ArrayList<MazeBlock>();
 		
 		// First, pick a wall (Top, Left, Right, Bottom)
 		int randWall = rn.nextInt(4);
@@ -99,30 +169,33 @@ public class Maze {
 			maze[0][randPos].setVisited();
 			unfinishedNodes.add(maze[0][randPos]);
 			start = maze[0][randPos];
+			startWall = 0;
 			//System.out.println("Pos on top wall at " + "0, " + randPos);
 			break;
-		// Left wall
-		case 1:
-			maze[randPos][0].setVisited();
-			unfinishedNodes.add(maze[randPos][0]);
-			start = maze[randPos][0];
-			//System.out.println("Pos on left wall at " + randPos + ", 0");
-			break;
-		// Right wall
-		case 2:
-			maze[randPos][maze.length - 1].setVisited();
-			unfinishedNodes.add(maze[randPos][maze.length - 1]);
-			start = maze[randPos][maze.length - 1];
-			//System.out.println("Pos on right wall at " + randPos + ", " + (maze.length - 1));
-			break;
 		// Bottom wall
-		case 3:
+		case 1:
 			maze[maze.length - 1][randPos].setVisited();
 			unfinishedNodes.add(maze[maze.length - 1][randPos]);
 			start = maze[maze.length - 1][randPos];
+			startWall = 1;
 			//System.out.println("Pos on bottom wall at " + (maze.length - 1) + ", " + randPos);
 			break;
+		// Left wall
+		case 2:
+			maze[randPos][0].setVisited();
+			unfinishedNodes.add(maze[randPos][0]);
+			start = maze[randPos][0];
+			startWall = 2;
+			//System.out.println("Pos on left wall at " + randPos + ", 0");
+			break;
+		// Right wall
+		case 3:
+			maze[randPos][maze.length - 1].setVisited();
+			unfinishedNodes.add(maze[randPos][maze.length - 1]);
+			start = maze[randPos][maze.length - 1];
+			startWall = 3;
+			//System.out.println("Pos on right wall at " + randPos + ", " + (maze.length - 1));
+			break;
 		}
-		
 	}
 }
